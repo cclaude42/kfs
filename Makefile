@@ -2,7 +2,29 @@
 # KFS
 ###################################
 
-NAME = kfs
+NAME = kfs.iso
+BIN = kfs.bin
+
+AC = i386-elf-as
+AFLAGS = 
+ASRC = boot/boot.S
+
+LC = i386-elf-gcc
+LFLAGS = -ffreestanding -O2 -nostdlib -lgcc
+LSRC = boot/linker.ld
+
+NC = nasm
+NFLAGS = -f elf
+NSRC = src/flush.s
+
+CC = i386-elf-gcc
+CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
+CSRC = src/kernel.c src/gdt.c
+
+OBJ = $(ASRC:.S=.o) $(NSRC:.s=.o) $(CSRC:.c=.o)
+
+ISODIR = isodir
+CFG = boot/grub.cfg
 
 ###################################
 # Methods
@@ -10,26 +32,34 @@ NAME = kfs
 
 all: $(NAME)
 
-$(NAME):
-	i386-elf-as boot.s -o boot.o
-	i386-elf-gcc -c kernel.c -o kernel.o -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-	i386-elf-gcc -T linker.ld -o kfs.bin -ffreestanding -O2 -nostdlib boot.o kernel.o -lgcc
-	mkdir -p isodir/boot/grub
-	cp kfs.bin isodir/boot/kfs.bin
-	cp grub.cfg isodir/boot/grub/grub.cfg
-	grub-mkrescue -o kfs.iso isodir
+.S.o:
+	$(AC) $< -o $@
 
-run:
-	qemu-system-i386 -cdrom kfs.iso
+.s.o:
+	$(NC) $(NFLAGS) $< -o $@
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME): $(BIN)
+	mkdir -p $(ISODIR)/boot/grub
+	cp $(BIN) $(ISODIR)/boot/$(BIN)
+	cp $(CFG) $(ISODIR)/boot/grub/grub.cfg
+	grub-mkrescue -o $(NAME) $(ISODIR)
+
+$(BIN): $(OBJ)
+	$(CC) -T $(LSRC) -o $(BIN) $(OBJ) $(LFLAGS)
+
+run: re
+	qemu-system-i386 -cdrom $(NAME)
 
 clean:
-	rm -f boot.o
-	rm -f kernel.o
-	rm -f kfs.bin
-	rm -rf isodir
+	rm -f $(OBJ)
+	rm -f $(BIN)
+	rm -rf $(ISODIR)
 
 fclean: clean
-	rm -f kfs.iso
+	rm -f $(NAME)
 
 re: fclean all
 

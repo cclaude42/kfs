@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
- 
+
 /* Check if the compiler thinks you are targeting the wrong operating system. */
 #if defined(__linux__)
 #error "You are not using a cross-compiler, you will most certainly run into trouble"
@@ -109,12 +109,17 @@ void terminal_writestring(const char* data)
 {
 	terminal_write(data, strlen(data));
 }
- 
+
+void gdt_initialize (void);
+
 void kernel_main(void) 
 {
 	/* Initialize terminal interface */
 	terminal_initialize();
- 
+
+	/* Initialize Global Descriptor Table */
+	gdt_initialize();
+
 	/* Print data to screen */
 	terminal_writestring("42\n");
 }
