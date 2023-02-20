@@ -1,8 +1,4 @@
-// Includes
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
-
+#include "kernel.h"
 
 // To set permissions
 #define SEG_PRES(x)		(x << 0x07)
@@ -24,7 +20,7 @@
 #define SEG_PERM_USER	SEG_PRES(1) | SEG_PRIV(3) | SEG_TYPE(1)
 // Type flags
 #define SEG_TYPE_CODE	SEG_CODE(1) | SEG_CONF(0) | SEG_READ(1) | SEG_ACCE(0)
-#define SEG_TYPE_DATA	SEG_CODE(0) | SEG_CONF(1) | SEG_READ(1) | SEG_ACCE(0)
+#define SEG_TYPE_DATA	SEG_CODE(0) | SEG_CONF(0) | SEG_READ(1) | SEG_ACCE(0)
 #define SEG_TYPE_STCK	SEG_CODE(0) | SEG_CONF(1) | SEG_READ(1) | SEG_ACCE(0)
 // Other flags
 #define SEG_FLAGS		SEG_GRAN(1) | SEG_32BT(1) | SEG_64BT(0) | SEG_AVAI(0)
@@ -58,7 +54,7 @@ gdt_descriptor	gdt_ptr;
 
 
 
-void gdt_define_segment (uint16_t index, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags)
+void gdt_define_segment (uint16_t index, uint32_t base, uint32_t limit, uint8_t access, uint8_t flags, char *comment)
 {
 	// Set base (start of segment)
 	gdt[index].base_low = base & 0xFFFF;
@@ -72,6 +68,8 @@ void gdt_define_segment (uint16_t index, uint32_t base, uint32_t limit, uint8_t 
 	// Set access and flags
 	gdt[index].access = access;
 	gdt[index].flags = flags & 0xF;
+
+	printk("[%s] Set up %s (base %x, limit %x, access %x, flags %x)\n", "GDT", comment, base, limit, access, flags);
 }
 
 void gdt_initialize (void)
@@ -81,13 +79,13 @@ void gdt_initialize (void)
 	gdt_ptr.limit = sizeof(gdt) - 1;
 
 	// Define segments
-	gdt_define_segment(0, 0, 0, 0, 0);
-	gdt_define_segment(1, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_CODE, SEG_FLAGS);
-	gdt_define_segment(2, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_DATA, SEG_FLAGS);
-	gdt_define_segment(3, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_STCK, SEG_FLAGS);
-	gdt_define_segment(4, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_CODE, SEG_FLAGS);
-	gdt_define_segment(5, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_DATA, SEG_FLAGS);
-	gdt_define_segment(6, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_STCK, SEG_FLAGS);
+	gdt_define_segment(0, 0, 0, 0, 0, "null segment");
+	gdt_define_segment(1, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_CODE, SEG_FLAGS, "kernel code");
+	gdt_define_segment(2, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_DATA, SEG_FLAGS, "kernel data");
+	gdt_define_segment(3, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_STCK, SEG_FLAGS, "kernel stack");
+	gdt_define_segment(4, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_CODE, SEG_FLAGS, "user code");
+	gdt_define_segment(5, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_DATA, SEG_FLAGS, "user data");
+	gdt_define_segment(6, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_STCK, SEG_FLAGS, "user stack");
 
 	// Initialize table with external ASM function
 	gdt_flush((uint32_t)&gdt_ptr);
