@@ -1,6 +1,4 @@
-#include <stdarg.h>
-#include <stdint.h>
-#include <stddef.h>
+#include "kernel.h"
 
 /* Hardware text mode color constants. */
 enum vga_color {
@@ -52,7 +50,7 @@ void terminal_initialize(void)
 {
 	terminal_row = 0;
 	terminal_column = 0;
-	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+	terminal_color = vga_entry_color(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
 	terminal_buffer = (uint16_t*) 0xB8000;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
 		for (size_t x = 0; x < VGA_WIDTH; x++) {
@@ -110,7 +108,7 @@ void t_itoa_base (uint32_t n, uint32_t base)
 	while (div < div * base && div * base < n)
 		div *= base;
 
-	while (n > 0) {
+	while (div > 0) {
 		t_putchar(chars[n / div]);
 		n = n % div;
 		div = div / base;
@@ -135,25 +133,35 @@ void printk (const char *s, ...)
 			continue;
 		}
 		else if (s[i] == 'c') {
+			terminal_color = VGA_COLOR_LIGHT_BLUE;
 			t_putchar(va_arg(args, int));
+			terminal_color = VGA_COLOR_WHITE;
 			continue;
 		}
 		else if (s[i] == 's') {
+			terminal_color = VGA_COLOR_LIGHT_BLUE;
 			t_writestring(va_arg(args, char *));
+			terminal_color = VGA_COLOR_WHITE;
 			continue;
 		}
 		else if (s[i] == 'u') {
+			terminal_color = VGA_COLOR_LIGHT_RED;
 			t_itoa_base(va_arg(args, uint32_t), 10);
+			terminal_color = VGA_COLOR_WHITE;
 			continue;
 		}
 		else if (s[i] == 'x') {
+			terminal_color = VGA_COLOR_LIGHT_RED;
 			t_writestring("0x");
 			t_itoa_base(va_arg(args, uint32_t), 16);
+			terminal_color = VGA_COLOR_WHITE;
 			continue;
 		}
 		else if (s[i] == 'b') {
+			terminal_color = VGA_COLOR_LIGHT_RED;
 			t_writestring("0b");
 			t_itoa_base(va_arg(args, uint32_t), 2);
+			terminal_color = VGA_COLOR_WHITE;
 			continue;
 		}
 	}
