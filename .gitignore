@@ -1,0 +1,4 @@
+**/*.o
+isodir
+kfs.bin
+kfs.iso

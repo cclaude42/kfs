@@ -64,7 +64,7 @@ _start:
 	in assembly as languages such as C cannot function without a stack.
 	*/
 	mov $stack_top, %esp
- 
+
 	/*
 	This is a good place to initialize crucial processor state before the
 	high-level kernel is entered. It's best to minimize the early
@@ -75,7 +75,7 @@ _start:
 	C++ features such as global constructors and exceptions will require
 	runtime support to work as well.
 	*/
- 
+
 	/*
 	Enter the high-level kernel. The ABI requires the stack is 16-byte
 	aligned at the time of the call instruction (which afterwards pushes
@@ -85,7 +85,7 @@ _start:
 	preserved and the call is well defined.
 	*/
 	call kernel_main
- 
+
 	/*
 	If the system has nothing more to do, put the computer into an
 	infinite loop. To do that:
