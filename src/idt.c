@@ -32,13 +32,44 @@ typedef struct s_idt_descriptor {
 
 // Assembler function
 extern void idt_flush (uint32_t idt_ptr);
+extern void isr_wrapper (void);
+extern void isr0  (void);
+extern void isr1  (void);
+extern void isr2  (void);
+extern void isr3  (void);
+extern void isr4  (void);
+extern void isr5  (void);
+extern void isr6  (void);
+extern void isr7  (void);
+extern void isr8  (void);
+extern void isr9  (void);
+extern void isr10 (void);
+extern void isr11 (void);
+extern void isr12 (void);
+extern void isr13 (void);
+extern void isr14 (void);
+extern void isr15 (void);
+extern void isr16 (void);
+extern void isr17 (void);
+extern void isr18 (void);
+extern void isr19 (void);
+extern void isr20 (void);
+extern void isr21 (void);
+extern void isr22 (void);
+extern void isr23 (void);
+extern void isr24 (void);
+extern void isr25 (void);
+extern void isr26 (void);
+extern void isr27 (void);
+extern void isr28 (void);
+extern void isr29 (void);
+extern void isr30 (void);
+extern void isr31 (void);
 
 
 // IDT globals
 idt_segment		idt[256];
 idt_descriptor	idt_ptr;
-
-extern void isr_wrapper (void);
 
 
 typedef struct registers
@@ -81,8 +112,38 @@ void idt_initialize (void)
 	idt_ptr.limit = sizeof(idt) - 1;
 
 	// Define segments
-	for (uint16_t i = 0 ; i < 256 ; i++)
-		idt_define_segment(i, (uint32_t)&isr_wrapper, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(0,  (uint32_t)&isr0,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(1,  (uint32_t)&isr1,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(2,  (uint32_t)&isr2,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(3,  (uint32_t)&isr3,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(4,  (uint32_t)&isr4,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(5,  (uint32_t)&isr5,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(6,  (uint32_t)&isr6,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(7,  (uint32_t)&isr7,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(8,  (uint32_t)&isr8,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(9,  (uint32_t)&isr9,  0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(10, (uint32_t)&isr10, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(11, (uint32_t)&isr11, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(12, (uint32_t)&isr12, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(13, (uint32_t)&isr13, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(14, (uint32_t)&isr14, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(15, (uint32_t)&isr15, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(16, (uint32_t)&isr16, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(17, (uint32_t)&isr17, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(18, (uint32_t)&isr18, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(19, (uint32_t)&isr19, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(20, (uint32_t)&isr20, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(21, (uint32_t)&isr21, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(22, (uint32_t)&isr22, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(23, (uint32_t)&isr23, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(24, (uint32_t)&isr24, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(25, (uint32_t)&isr25, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(26, (uint32_t)&isr26, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(27, (uint32_t)&isr27, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(28, (uint32_t)&isr28, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(29, (uint32_t)&isr29, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(30, (uint32_t)&isr30, 0x0008, DEFAULT_PERM, INT_32BIT);
+	idt_define_segment(31, (uint32_t)&isr31, 0x0008, DEFAULT_PERM, INT_32BIT);
 
 	// Initialize table with external ASM function
 	idt_flush((uint32_t)&idt_ptr);
