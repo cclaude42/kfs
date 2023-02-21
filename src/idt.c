@@ -35,11 +35,25 @@ extern void idt_flush (uint32_t idt_ptr);
 
 
 // IDT globals
-// __attribute__((section(".idt")))
 idt_segment		idt[256];
 idt_descriptor	idt_ptr;
 
+extern void isr_wrapper (void);
 
+
+typedef struct registers
+{
+   uint32_t ds;                  // Data segment selector
+   uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax; // Pushed by pusha.
+   uint32_t int_no, err_code;    // Interrupt number and error code (if applicable)
+   uint32_t eip, cs, eflags, useresp, ss; // Pushed by the processor automatically.
+} __attribute__((packed)) registers_t; 
+
+void isr_handler (registers_t cock)
+{
+	(void)cock;
+	printk("cock and balls\n");
+}
 
 void idt_define_segment (uint16_t index, uint32_t offset, uint16_t selector, uint8_t access, uint8_t type)
 {
@@ -57,7 +71,7 @@ void idt_define_segment (uint16_t index, uint32_t offset, uint16_t selector, uin
 	// Set reserved
 	idt[index].reserved = 0x0;
 
-	printk("[%s] Set up segment (offset %x, selector %x, type %x, access %x)\n", "IDT", offset, selector, type, access);
+	// printk("[%s] Set up segment (offset %x, selector %x, type %x, access %x)\n", "IDT", offset, selector, type, access);
 }
 
 void idt_initialize (void)
@@ -67,7 +81,8 @@ void idt_initialize (void)
 	idt_ptr.limit = sizeof(idt) - 1;
 
 	// Define segments
-	idt_define_segment(0, 0x00000000, 0x0008, DEFAULT_PERM, INT_32BIT);
+	for (uint16_t i = 0 ; i < 256 ; i++)
+		idt_define_segment(i, (uint32_t)&isr_wrapper, 0x0008, DEFAULT_PERM, INT_32BIT);
 
 	// Initialize table with external ASM function
 	idt_flush((uint32_t)&idt_ptr);

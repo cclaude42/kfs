@@ -27,4 +27,7 @@ void kernel_main(void)
 
 	/* Print data to screen */
 	printk("42\n");
+
+	// asm volatile ("int $0x3");
+	// asm volatile ("int $0x4"); 
 }
