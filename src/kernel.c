@@ -22,6 +22,9 @@ void kernel_main(void)
 	/* Initialize Global Descriptor Table */
 	gdt_initialize();
 
+	/* Initialize Interrupt Descriptor Table */
+	idt_initialize();
+
 	/* Print data to screen */
 	printk("42\n");
 }

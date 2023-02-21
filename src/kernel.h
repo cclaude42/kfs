@@ -5,4 +5,5 @@
 
 void terminal_initialize (void);
 void gdt_initialize (void);
+void idt_initialize (void);
 void printk (const char *s, ...);
