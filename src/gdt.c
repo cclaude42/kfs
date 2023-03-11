@@ -80,12 +80,12 @@ void gdt_initialize (void)
 
 	// Define segments
 	gdt_define_segment(0, 0, 0, 0, 0, "null segment");
-	gdt_define_segment(1, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_CODE, SEG_FLAGS, "kernel code");
-	gdt_define_segment(2, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_DATA, SEG_FLAGS, "kernel data");
+	gdt_define_segment(1, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_CODE, SEG_FLAGS, "kernel code ");
+	gdt_define_segment(2, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_DATA, SEG_FLAGS, "kernel data ");
 	gdt_define_segment(3, 0x00000000, 0xFFFFF, SEG_PERM_KERN | SEG_TYPE_STCK, SEG_FLAGS, "kernel stack");
-	gdt_define_segment(4, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_CODE, SEG_FLAGS, "user code");
-	gdt_define_segment(5, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_DATA, SEG_FLAGS, "user data");
-	gdt_define_segment(6, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_STCK, SEG_FLAGS, "user stack");
+	gdt_define_segment(4, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_CODE, SEG_FLAGS, "user code   ");
+	gdt_define_segment(5, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_DATA, SEG_FLAGS, "user data   ");
+	gdt_define_segment(6, 0x00000000, 0xFFFFF, SEG_PERM_USER | SEG_TYPE_STCK, SEG_FLAGS, "user stack  ");
 
 	// Initialize table with external ASM function
 	gdt_flush((uint32_t)&gdt_ptr);

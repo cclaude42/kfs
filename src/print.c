@@ -60,7 +60,7 @@ void terminal_initialize(void)
 	}
 }
  
-void t_setcolor(uint8_t color) 
+void t_setcolor(uint8_t color)
 {
 	terminal_color = color;
 }
