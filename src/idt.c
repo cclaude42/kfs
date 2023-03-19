@@ -80,10 +80,10 @@ typedef struct registers
    uint32_t eip, cs, eflags, useresp, ss; // Pushed by the processor automatically.
 } __attribute__((packed)) registers_t; 
 
-void isr_handler (registers_t cock)
+void isr_handler (registers_t yo)
 {
-	(void)cock;
-	printk("cock and balls\n");
+	(void)yo;
+	printk("got interrupted\n");
 }
 
 void idt_define_segment (uint16_t index, uint32_t offset, uint16_t selector, uint8_t access, uint8_t type)

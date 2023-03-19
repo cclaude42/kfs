@@ -19,7 +19,7 @@ NSRC = src/flush.s
 
 CC = i386-elf-gcc
 CFLAGS = -std=gnu99 -ffreestanding -O2 -Wall -Wextra
-CSRC = src/kernel.c src/print.c src/gdt.c src/idt.c
+CSRC = src/kernel.c src/print.c src/gdt.c src/idt.c src/pic.c
 
 OBJ = $(ASRC:.S=.o) $(NSRC:.s=.o) $(CSRC:.c=.o)
 

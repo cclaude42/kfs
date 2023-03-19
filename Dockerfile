@@ -36,4 +36,4 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-12.2.0/gcc-12.2.0.tar.xz && \
 	rm -rf gcc-12.2.0
 
 WORKDIR /workspace
-ENTRYPOINT zsh
+CMD zsh

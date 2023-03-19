@@ -24,10 +24,11 @@ void kernel_main(void)
 
 	/* Initialize Interrupt Descriptor Table */
 	idt_initialize();
+	asm volatile ("sti");
 
 	/* Print data to screen */
 	printk("42\n");
 
 	asm volatile ("int $0x3");
-	asm volatile ("int $0x4"); 
+	// asm volatile ("int $0x4"); 
 }
